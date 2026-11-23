@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UCMM | Unidad Central de Monitoreo de Mantenimiento</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    body {
+      background-color: #F4F6F9;
+      color: #0F172A;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    }
+    .panel-card {
+      background-color: #FFFFFF;
+      border: 1px solid #E2E8F0;
+      box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+    }
+    .sidebar-bg {
+      background: linear-gradient(180deg, #4A2E7A 0%, #341D5C 100%);
+      border-right: 1px solid rgba(255, 255, 255, 0.1);
+      color: #F8FAFC;
+    }
+    .sidebar-bg .text-slate-900 { color: #FFFFFF !important; }
+    .sidebar-bg .text-slate-600 { color: #E2E8F0 !important; }
+    .sidebar-bg .text-slate-500 { color: #CBD5E1 !important; }
+    .sidebar-bg .text-slate-400 { color: #CBD5E1 !important; }
+    .sidebar-bg .border-slate-200 { border-color: rgba(255, 255, 255, 0.15) !important; }
+
+    .sidebar-bg .nav-btn:hover,
+    .sidebar-bg .sub-btn:hover {
+      background-color: rgba(255, 255, 255, 0.08) !important;
+      color: #FFFFFF !important;
+    }
+    .sidebar-bg .bg-slate-100 {
+      background-color: rgba(255, 255, 255, 0.15) !important;
+      color: #FFFFFF !important;
+    }
+
+    .nav-item-active {
+      background: linear-gradient(90deg, rgba(236, 0, 140, 0.3) 0%, rgba(124, 58, 237, 0.25) 100%);
+      border-left: 3px solid #EC008C;
+      color: #FFFFFF !important;
+    }
+
+    .sky-green-header {
+      background-color: #007A38;
+      border-bottom: 1px solid #00632D;
+      color: #FFFFFF;
+    }
+    .sky-green-header h1 {
+      color: #FFFFFF !important;
+    }
+    .sky-green-header #topCategoryLabel {
+      color: #D1FAE5 !important;
+    }
+
+    .btn-magenta {
+      background-color: #EC008C;
+      color: #FFFFFF;
+    }
+    .btn-magenta:hover {
+      background-color: #D1007B;
+    }
+    .btn-slate {
+      background-color: #FFFFFF;
+      border: 1px solid #CBD5E1;
+      color: #334155;
+    }
+    .btn-slate:hover {
+      background-color: #F8FAFC;
+      border-color: #94A3B8;
+    }
+    .quick-card {
+      transition: transform 0.14s ease, border-color 0.14s ease, box-shadow 0.14s ease;
+    }
+    .quick-card:hover {
+      transform: translateY(-2px);
+      border-color: #EC008C;
+      box-shadow: 0 6px 16px rgba(15, 23, 42, 0.07);
+    }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #F4F6F9; }
+    ::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 3px; }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col lg:flex-row antialiased overflow-x-hidden">
+
+  <input type="file" id="globalFileInput" class="hidden" onchange="handleFileUpload(event.target.files[0])" />
+
+  <!-- ================= SIDEBAR IZQUIERDO / MENÚ MÓVIL ================= -->
+  <aside class="sidebar-bg w-full lg:w-72 shrink-0 lg:h-screen lg:sticky lg:top-0 flex flex-col justify-between shadow-sm">
+    <div class="flex flex-col lg:h-full lg:overflow-hidden">
+
+      <div class="p-3.5 sm:p-4 flex items-center justify-between gap-2 border-b border-white/10 shrink-0">
+        <button type="button" onclick="selectFocusedView('home')" title="Ir al menú principal" class="flex items-center gap-3 text-left min-w-0 flex-1 hover:opacity-95 transition cursor-pointer">
+          <div class="w-10 h-9 sm:w-11 sm:h-10 rounded-lg bg-gradient-to-br from-[#EC008C] to-[#7C3AED] flex items-center justify-center font-bold text-white text-xs tracking-wider shadow-sm shrink-0">
+            UCMM
+          </div>
+          <div class="min-w-0">
+            <div class="font-bold text-white text-xs leading-snug truncate sm:whitespace-normal">Unidad Central de Monitoreo de Mantenimiento</div>
+            <div class="text-[10px] text-slate-300 uppercase tracking-widest truncate mt-0.5">(UCMM) · Menú Principal</div>
+          </div>
+        </button>
+
+        <button type="button" onclick="toggleMobileNav()" aria-label="Mostrar u ocultar menú" class="lg:hidden px-2.5 py-2 rounded-lg bg-white/10 hover:bg-white/15 text-white text-xs font-semibold flex items-center gap-1.5 shrink-0 cursor-pointer">
+          <i id="mobileMenuIcon" data-lucide="menu" class="w-4 h-4"></i>
+          <span class="text-[11px]">Menú</span>
+        </button>
+      </div>
+
+      <div id="sidebarCollapsibleBody" class="hidden lg:flex lg:flex-col lg:flex-1 lg:overflow-hidden">
+        <nav class="py-3 px-2 space-y-1 lg:overflow-y-auto flex-1">
+          <button type="button" data-nav="home" onclick="selectFocusedView('home')" class="nav-btn nav-item-active w-full flex items-center gap-3 px-3 py-2.5 rounded-r-lg text-xs font-semibold text-slate-200 text-left transition cursor-pointer">
+            <i data-lucide="layout-grid" class="w-4 h-4 text-pink-400 shrink-0"></i>
+            <span class="truncate">Menú Principal</span>
+          </button>
+
+          <div class="pt-2 pb-1 px-3 text-[10px] font-bold uppercase tracking-wider text-slate-400">
+            Módulos Operacionales
+          </div>
+
+          <!-- Desplegable: Mantenimiento nocturno -->
+          <div class="pt-1">
+            <button type="button" onclick="toggleAccordion('groupMantNocturno', 'chevronMantNocturno')" class="nav-btn w-full flex items-center justify-between px-3 py-2.5 rounded-r-lg text-xs font-semibold text-slate-200 text-left transition cursor-pointer">
+              <span class="flex items-center gap-3 min-w-0">
+                <i data-lucide="moon" class="w-4 h-4 text-indigo-300 shrink-0"></i>
+                <span class="truncate">Mantenimiento nocturno</span>
+              </span>
+              <i id="chevronMantNocturno" data-lucide="chevron-down" class="w-4 h-4 text-slate-300 transition-transform shrink-0"></i>
+            </button>
+            <div id="groupMantNocturno" class="pl-7 pr-2 py-1 space-y-1">
+              <button type="button" data-nav="mn_programacion" onclick="selectFocusedView('mn_programacion')" class="sub-btn nav-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium text-slate-300 text-left transition cursor-pointer">
+                <span class="text-pink-400 font-bold">-</span>
+                <span class="truncate">Programación</span>
+              </button>
+              <button type="button" data-nav="mn_turno" onclick="selectFocusedView('mn_turno')" class="sub-btn nav-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium text-slate-300 text-left transition cursor-pointer">
+                <span class="text-pink-400 font-bold">-</span>
+                <span class="truncate">Turno</span>
+              </button>
+              <button type="button" data-nav="mn_distribucion" onclick="selectFocusedView('mn_distribucion')" class="sub-btn nav-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium text-slate-300 text-left transition cursor-pointer">
+                <span class="text-pink-400 font-bold">-</span>
+                <span class="truncate">Distribución</span>
+              </button>
+              <button type="button" data-nav="mn_plantilla_turno" onclick="selectFocusedView('mn_plantilla_turno')" class="sub-btn nav-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium text-slate-300 text-left transition cursor-pointer">
+                <span class="text-pink-400 font-bold">-</span>
+                <span class="truncate">Plantilla turno</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Desplegable: Talleres -->
+          <div class="pt-1">
+            <button type="button" onclick="toggleAccordion('groupTalleres', 'chevronTalleres')" class="nav-btn w-full flex items-center justify-between px-3 py-2.5 rounded-r-lg text-xs font-semibold text-slate-200 text-left transition cursor-pointer">
+              <span class="flex items-center gap-3 min-w-0">
+                <i data-lucide="wrench" class="w-4 h-4 text-emerald-300 shrink-0"></i>
+                <span class="truncate">Talleres</span>
+              </span>
+              <i id="chevronTalleres" data-lucide="chevron-down" class="w-4 h-4 text-slate-300 transition-transform shrink-0"></i>
+            </button>
+            <div id="groupTalleres" class="pl-7 pr-2 py-1 space-y-1">
+              <button type="button" data-nav="taller_aog" onclick="selectFocusedView('taller_aog')" class="sub-btn nav-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium text-slate-300 text-left transition cursor-pointer">
+                <span class="text-emerald-400 font-bold">-</span>
+                <span class="truncate">AOG</span>
+              </button>
+              <button type="button" data-nav="taller_tru" onclick="selectFocusedView('taller_tru')" class="sub-btn nav-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium text-slate-300 text-left transition cursor-pointer">
+                <span class="text-emerald-400 font-bold">-</span>
+                <span class="truncate">TRU</span>
+              </button>
+              <button type="button" data-nav="taller_eng" onclick="selectFocusedView('taller_eng')" class="sub-btn nav-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium text-slate-300 text-left transition cursor-pointer">
+                <span class="text-emerald-400 font-bold">-</span>
+                <span class="truncate">ENG</span>
+              </button>
+            </div>
+          </div>
+
+          <button type="button" data-nav="upload" onclick="selectFocusedView('upload')" title="Cargas y subidas" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-r-lg text-xs font-medium text-slate-600 text-left transition mt-2 cursor-pointer">
+            <i data-lucide="upload-cloud" class="w-4 h-4 text-sky-300 shrink-0"></i>
+            <span class="truncate">Cargas y subidas</span>
+          </button>
+        </nav>
+
+        <div class="p-3.5 border-t border-white/10 space-y-1.5 bg-black/20 shrink-0 text-[11px]">
+          <div class="flex items-center gap-1.5 font-bold text-amber-300 uppercase tracking-wider">
+            <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+            <span>WIP (WORK IN PROCESS)</span>
+          </div>
+          <div class="text-slate-300">Carpeta: <span class="text-white font-semibold font-mono">/NEXO</span></div>
+          <div class="text-slate-400">Auto-refresh: <span class="text-emerald-300 font-semibold">Cada 4 horas</span></div>
+        </div>
+      </div>
+
+    </div>
+  </aside>
+
+  <!-- ================= ÁREA PRINCIPAL FOCALIZADA ================= -->
+  <div class="flex-1 flex flex-col min-w-0">
+
+    <header class="sky-green-header px-4 sm:px-6 py-3.5 sm:py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm">
+      <div class="min-w-0">
+        <div id="topCategoryLabel" class="text-[10px] font-bold uppercase tracking-widest truncate">
+          UNIDAD CENTRAL DE MONITOREO DE MANTENIMIENTO (UCMM) · BIENVENIDA
+        </div>
+        <h1 id="topMainTitle" class="text-base sm:text-lg font-bold tracking-tight truncate">
+          Menú Principal
+        </h1>
+      </div>
+
+      <div class="flex items-center gap-2 flex-wrap">
+        <div class="bg-black/25 border border-white/20 px-2.5 py-1.5 rounded-md text-[11px] sm:text-xs font-mono flex items-center gap-1.5 text-white">
+          <i data-lucide="clock" class="w-3.5 h-3.5 text-emerald-300 shrink-0"></i>
+          <span id="realTimeClock" class="font-semibold tracking-wider">--:--:--</span>
+        </div>
+
+        <button type="button" id="userBadgeBtn" onclick="promptCorporateUser()" title="Clic para actualizar usuario/correo corporativo" class="btn-slate px-2.5 py-1.5 rounded-md text-[11px] sm:text-xs font-medium flex items-center gap-1.5 max-w-[180px] sm:max-w-none cursor-pointer">
+          <i data-lucide="user" class="w-3.5 h-3.5 text-[#0078D4] shrink-0"></i>
+          <span id="currentUserName" class="truncate">Usuario Corporativo</span>
+          <span id="currentUserEmail" class="text-[10px] text-slate-500 hidden md:inline"></span>
+        </button>
+
+        <button type="button" onclick="document.getElementById('globalFileInput').click()" class="btn-magenta px-3 sm:px-4 py-1.5 rounded-md text-[11px] sm:text-xs font-semibold flex items-center gap-1 shadow-sm transition cursor-pointer">
+          <i data-lucide="plus" class="w-4 h-4"></i>
+          <span>Subir archivo</span>
+        </button>
+      </div>
+    </header>
+
+    <main class="flex-1 p-4 sm:p-6 space-y-4 sm:space-y-5 max-w-[1600px] w-full mx-auto">
+
+      <div id="statusBanner" class="panel-card rounded-lg px-3.5 sm:px-4 py-2.5 sm:py-3 text-xs text-slate-700 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+        <div class="flex items-start sm:items-center gap-2.5 min-w-0">
+          <i id="statusIcon" data-lucide="info" class="w-4 h-4 text-[#0078D4] shrink-0 mt-0.5 sm:mt-0"></i>
+          <span id="statusText" class="leading-snug">Bienvenido a UCMM. Selecciona el módulo o taller que deseas consultar.</span>
+        </div>
+        <div class="flex items-center gap-3 text-[11px] text-slate-500 font-mono shrink-0">
+          <span id="nextAutoRefreshLabel">Próximo ciclo 4h: --:--</span>
+        </div>
+      </div>
+
+      <!-- ================= INTERFAZ DE BIENVENIDA / MENÚ PRINCIPAL ================= -->
+      <div id="viewHomeMenu" class="space-y-5 sm:space-y-6">
+        <section class="panel-card rounded-xl p-4 sm:p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div class="space-y-1.5 max-w-2xl">
+            <div class="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-wider text-[#EC008C]">
+              <i data-lucide="shield-check" class="w-4 h-4"></i>
+              <span>Portal Operativo · Uso Exclusivo Interno</span>
+            </div>
+            <h2 class="text-lg sm:text-xl font-bold text-slate-900 leading-snug">
+              Bienvenido a la Unidad Central de Monitoreo de Mantenimiento (UCMM)
+            </h2>
+            <p class="text-xs text-slate-600 leading-relaxed">
+              Selecciona una opción para ver su planilla en vivo dentro de la misma web o gestionar cargas en el repositorio. Todos los documentos vinculados se actualizan automáticamente cada 4 horas.
+            </p>
+          </div>
+          <div class="flex items-center gap-2 shrink-0 flex-wrap">
+            <button type="button" onclick="refreshAllDocuments(true)" class="btn-slate px-3.5 py-2 rounded-lg text-xs font-semibold flex items-center gap-2 cursor-pointer">
+              <i data-lucide="refresh-cw" class="w-3.5 h-3.5 text-[#0078D4]"></i>
+              <span>Actualizar todo</span>
+            </button>
+            <button type="button" onclick="selectFocusedView('upload')" class="btn-magenta px-3.5 py-2 rounded-lg text-xs font-semibold flex items-center gap-2 cursor-pointer">
+              <i data-lucide="upload-cloud" class="w-3.5 h-3.5"></i>
+              <span>Cargas y subidas</span>
+            </button>
+          </div>
+        </section>
+
+        <!-- Mantenimiento nocturno -->
+        <section class="space-y-3">
+          <div class="flex items-center gap-2 px-1">
+            <i data-lucide="moon" class="w-4 h-4 text-[#4A2E7A]"></i>
+            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-700">Mantenimiento nocturno</h3>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+            <button type="button" onclick="selectFocusedView('mn_programacion')" class="quick-card panel-card rounded-xl p-4 sm:p-5 text-left flex flex-col justify-between gap-3 sm:gap-4 cursor-pointer">
+              <div class="flex items-start justify-between gap-3">
+                <div class="w-10 h-10 rounded-lg bg-emerald-50 border border-emerald-200 flex items-center justify-center text-[#007A38] shrink-0">
+                  <i data-lucide="calendar-range" class="w-5 h-5"></i>
+                </div>
+                <span class="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">Vinculado</span>
+              </div>
+              <div>
+                <div class="text-sm font-bold text-slate-900">Programación</div>
+                <p class="text-[11px] text-slate-500 mt-1">Planilla en vivo de programación de mantenimiento nocturno.</p>
+              </div>
+              <div class="text-xs font-semibold text-[#007A38] flex items-center gap-1.5">
+                <span>Ver en la web</span>
+                <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+              </div>
+            </button>
+
+            <button type="button" onclick="selectFocusedView('mn_turno')" class="quick-card panel-card rounded-xl p-4 sm:p-5 text-left flex flex-col justify-between gap-3 sm:gap-4 cursor-pointer">
+              <div class="flex items-start justify-between gap-3">
+                <div class="w-10 h-10 rounded-lg bg-emerald-50 border border-emerald-200 flex items-center justify-center text-[#007A38] shrink-0">
+                  <i data-lucide="users" class="w-5 h-5"></i>
+                </div>
+                <span class="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">ROL_MNTTO.xlsx</span>
+              </div>
+              <div>
+                <div class="text-sm font-bold text-slate-900">Turno</div>
+                <p class="text-[11px] text-slate-500 mt-1">Control de dotación y turnos en vivo.</p>
+              </div>
+              <div class="text-xs font-semibold text-[#007A38] flex items-center gap-1.5">
+                <span>Ver en la web</span>
+                <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+              </div>
+            </button>
+
+            <button type="button" onclick="selectFocusedView('mn_distribucion')" class="quick-card panel-card rounded-xl p-4 sm:p-5 text-left flex flex-col justify-between gap-3 sm:gap-4 cursor-pointer">
+              <div class="flex items-start justify-between gap-3">
+                <div class="w-10 h-10 rounded-lg bg-emerald-50 border border-emerald-200 flex items-center justify-center text-[#007A38] shrink-0">
+                  <i data-lucide="git-branch" class="w-5 h-5"></i>
+                </div>
+                <span class="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">Vinculado</span>
+              </div>
+              <div>
+                <div class="text-sm font-bold text-slate-900">Distribución</div>
+                <p class="text-[11px] text-slate-500 mt-1">Planilla en vivo de distribución de mantenimiento nocturno.</p>
+              </div>
+              <div class="text-xs font-semibold text-[#007A38] flex items-center gap-1.5">
+                <span>Ver en la web</span>
+                <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+              </div>
+            </button>
+
+            <button type="button" onclick="selectFocusedView('mn_plantilla_turno')" class="quick-card panel-card rounded-xl p-4 sm:p-5 text-left flex flex-col justify-between gap-3 sm:gap-4 cursor-pointer">
+              <div class="flex items-start justify-between gap-3">
+                <div class="w-10 h-10 rounded-lg bg-emerald-50 border border-emerald-200 flex items-center justify-center text-[#007A38] shrink-0">
+                  <i data-lucide="file-spreadsheet" class="w-5 h-5"></i>
+                </div>
+                <span class="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">Vinculado</span>
+              </div>
+              <div>
+                <div class="text-sm font-bold text-slate-900">Plantilla turno</div>
+                <p class="text-[11px] text-slate-500 mt-1">Plantilla de turno en vivo para mantenimiento nocturno.</p>
+              </div>
+              <div class="text-xs font-semibold text-[#007A38] flex items-center gap-1.5">
+                <span>Ver en la web</span>
+                <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+              </div>
+            </button>
+          </div>
+        </section>
+
+        <!-- Talleres -->
+        <section class="space-y-3">
+          <div class="flex items-center gap-2 px-1">
+            <i data-lucide="wrench" class="w-4 h-4 text-[#007A38]"></i>
+            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-700">Talleres</h3>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+            <button type="button" onclick="selectFocusedView('taller_aog')" class="quick-card panel-card rounded-xl p-4 sm:p-5 text-left flex flex-col justify-between gap-3 sm:gap-4 cursor-pointer">
+              <div class="flex items-start justify-between gap-3">
+                <div class="w-10 h-10 rounded-lg bg-purple-50 border border-purple-200 flex items-center justify-center text-[#4A2E7A] shrink-0">
+                  <i data-lucide="alert-triangle" class="w-5 h-5"></i>
+                </div>
+                <span class="text-[10px] font-semibold px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200">Pendiente</span>
+              </div>
+              <div>
+                <div class="text-sm font-bold text-slate-900">AOG</div>
+                <p class="text-[11px] text-slate-500 mt-1">Acceso directo al módulo del taller AOG.</p>
+              </div>
+              <div class="text-xs font-semibold text-[#4A2E7A] flex items-center gap-1.5">
+                <span>Ver en la web</span>
+                <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+              </div>
+            </button>
+
+            <button type="button" onclick="selectFocusedView('taller_tru')" class="quick-card panel-card rounded-xl p-4 sm:p-5 text-left flex flex-col justify-between gap-3 sm:gap-4 cursor-pointer">
+              <div class="flex items-start justify-between gap-3">
+                <div class="w-10 h-10 rounded-lg bg-purple-50 border border-purple-200 flex items-center justify-center text-[#4A2E7A] shrink-0">
+                  <i data-lucide="cog" class="w-5 h-5"></i>
+                </div>
+                <span class="text-[10px] font-semibold px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200">Pendiente</span>
+              </div>
+              <div>
+                <div class="text-sm font-bold text-slate-900">TRU</div>
+                <p class="text-[11px] text-slate-500 mt-1">Acceso directo al módulo del taller TRU.</p>
+              </div>
+              <div class="text-xs font-semibold text-[#4A2E7A] flex items-center gap-1.5">
+                <span>Ver en la web</span>
+                <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+              </div>
+            </button>
+
+            <button type="button" onclick="selectFocusedView('taller_eng')" class="quick-card panel-card rounded-xl p-4 sm:p-5 text-left flex flex-col justify-between gap-3 sm:gap-4 cursor-pointer">
+              <div class="flex items-start justify-between gap-3">
+                <div class="w-10 h-10 rounded-lg bg-purple-50 border border-purple-200 flex items-center justify-center text-[#4A2E7A] shrink-0">
+                  <i data-lucide="cpu" class="w-5 h-5"></i>
+                </div>
+                <span class="text-[10px] font-semibold px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200">Pendiente</span>
+              </div>
+              <div>
+                <div class="text-sm font-bold text-slate-900">ENG</div>
+                <p class="text-[11px] text-slate-500 mt-1">Acceso directo al módulo del taller ENG.</p>
+              </div>
+              <div class="text-xs font-semibold text-[#4A2E7A] flex items-center gap-1.5">
+                <span>Ver en la web</span>
+                <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+              </div>
+            </button>
+          </div>
+        </section>
+      </div>
+
+      <!-- ================= VISTA DEDICADA PARA SUB-ÍTEMS Y CARGAS ================= -->
+      <div id="viewSingleItem" class="hidden space-y-4">
+        <section class="panel-card rounded-xl p-3.5 sm:p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div class="flex items-center gap-3 min-w-0">
+            <div class="w-9 h-9 rounded-lg bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-700 shrink-0">
+              <i data-lucide="file-spreadsheet" class="w-5 h-5"></i>
+            </div>
+            <div class="min-w-0">
+              <div class="flex items-center gap-1.5 flex-wrap">
+                <span id="singleItemGroup" class="text-[10px] font-bold uppercase tracking-widest text-[#EC008C]">
+                  Mantenimiento nocturno
+                </span>
+                <span id="liveBadge" class="text-[10px] font-semibold px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200">Interactivo</span>
+                <span class="text-[10px] font-semibold px-2 py-0.5 rounded bg-slate-100 text-slate-600 border border-slate-200">Auto-actualiza cada 4h</span>
+              </div>
+              <h2 id="singleItemTitle" class="text-sm font-bold text-slate-900 mt-0.5 truncate">
+                Programación
+              </h2>
+              <p id="singleItemDesc" class="text-[11px] text-slate-500 line-clamp-2">
+                Libro Excel en vivo de Programación de Mantenimiento Nocturno.
+              </p>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2 flex-wrap">
+            <button type="button" onclick="selectFocusedView('home')" class="btn-slate px-3 py-1.5 rounded-md text-xs font-medium flex items-center gap-1.5 cursor-pointer">
+              <i data-lucide="layout-grid" class="w-3.5 h-3.5 text-[#4A2E7A]"></i><span>Menú principal</span>
+            </button>
+            <div id="excelToolbar" class="flex items-center gap-2 flex-wrap">
+              <button type="button" onclick="refreshAllDocuments(true)" class="btn-slate px-3 py-1.5 rounded-md text-xs font-medium flex items-center gap-1.5 cursor-pointer">
+                <i data-lucide="refresh-cw" class="w-3.5 h-3.5 text-[#0078D4]"></i><span>Actualizar ahora</span>
+              </button>
+              <button type="button" onclick="toggleFullScreen('excelFrameContainer')" class="btn-slate px-3 py-1.5 rounded-md text-xs font-medium flex items-center gap-1.5 cursor-pointer">
+                <i data-lucide="maximize-2" class="w-3.5 h-3.5 text-slate-600"></i><span>Pantalla completa</span>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- Visor Excel SharePoint en vivo dentro de la misma web -->
+        <section id="excelFrameContainer" class="panel-card rounded-xl overflow-hidden bg-white relative h-[65vh] min-h-[420px] sm:h-[75vh] lg:h-[80vh]">
+          <iframe id="activeExcelIframe" src="" class="w-full h-full border-0" allowfullscreen></iframe>
+        </section>
+
+        <!-- Aviso cuando aún no se ha pegado la URL de SharePoint de ese ítem -->
+        <section id="pendingUrlBox" class="hidden panel-card rounded-xl p-6 sm:p-8 text-center space-y-2">
+          <i data-lucide="link-2-off" class="w-8 h-8 text-amber-500 mx-auto"></i>
+          <h3 class="text-xs font-bold uppercase tracking-wider text-slate-800">Archivo pendiente de vincular</h3>
+          <p class="text-xs text-slate-500 max-w-md mx-auto">
+            Este sub-ítem aún no tiene asignado su enlace <code class="bg-slate-100 px-1.5 py-0.5 rounded text-slate-700">embedview</code> de SharePoint/OneDrive en <code class="bg-slate-100 px-1.5 py-0.5 rounded text-slate-700">ITEM_CONFIG</code>.
+          </p>
+        </section>
+
+        <!-- Área de carga cuando se selecciona "Cargas y subidas" -->
+        <section id="singleUploadBox" class="hidden panel-card rounded-xl p-4 sm:p-5">
+          <div id="dropZone" onclick="document.getElementById('globalFileInput').click()" class="bg-slate-50 border-2 border-dashed border-slate-300 hover:border-[#EC008C] hover:bg-pink-50/20 rounded-lg p-6 sm:p-8 text-center cursor-pointer transition">
+            <i data-lucide="upload-cloud" class="w-8 h-8 text-[#0078D4] mx-auto mb-2"></i>
+            <p class="text-xs font-semibold text-slate-800">Toca para examinar o seleccionar un archivo</p>
+            <p id="uploadStatus" class="text-[11px] text-slate-500 mt-1">Destino: OneDrive /NEXO</p>
+          </div>
+        </section>
+      </div>
+
+    </main>
+  </div>
+
+  <script>
+    const FLOW_UPLOAD_URL = "https://default4fd648bccc1f43029f1b8fe9f89fa0.92.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/04/workflows/46117fa4a53e411c8179f50d3b148106/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=iiqvuqerFKiszh-Vnw2j542auW8jSisWek4ZzF8NWxw";
+
+    const FOUR_HOURS_MS = 4 * 60 * 60 * 1000;
+    const USER_STORAGE_KEY = "ucmm_corp_user";
+
+    function setMobileNavOpen(isOpen) {
+      const bodyEl = document.getElementById("sidebarCollapsibleBody");
+      const iconEl = document.getElementById("mobileMenuIcon");
+      if (!bodyEl) return;
+      if (window.innerWidth >= 1024) {
+        bodyEl.classList.remove("hidden");
+        return;
+      }
+      if (isOpen) {
+        bodyEl.classList.remove("hidden");
+        if (iconEl) iconEl.setAttribute("data-lucide", "x");
+      } else {
+        bodyEl.classList.add("hidden");
+        if (iconEl) iconEl.setAttribute("data-lucide", "menu");
+      }
+      if (window.lucide) lucide.createIcons();
+    }
+
+    function toggleMobileNav() {
+      const bodyEl = document.getElementById("sidebarCollapsibleBody");
+      if (!bodyEl) return;
+      const willOpen = bodyEl.classList.contains("hidden");
+      setMobileNavOpen(willOpen);
+    }
+
+    function formatNameFromEmail(email) {
+      if (!email || !email.includes("@")) return "";
+      const localPart = email.split("@")[0];
+      return localPart
+        .replace(/[._-]+/g, " ")
+        .trim()
+        .replace(/\b\w/g, c => c.toUpperCase());
+    }
+
+    function resolveCorporateUser() {
+      const injected = window.UCMM_CORPORATE_USER || window.NEXO_CORPORATE_USER || (window._spPageContextInfo && window._spPageContextInfo.userDisplayName
+        ? {
+            name: window._spPageContextInfo.userDisplayName,
+            email: window._spPageContextInfo.userEmail || ""
+          }
+        : null);
+
+      if (injected && (injected.name || injected.email)) {
+        return {
+          name: injected.name || formatNameFromEmail(injected.email),
+          email: injected.email || ""
+        };
+      }
+
+      try {
+        const saved = JSON.parse(localStorage.getItem(USER_STORAGE_KEY) || "null");
+        if (saved && (saved.name || saved.email)) {
+          return {
+            name: saved.name || formatNameFromEmail(saved.email),
+            email: saved.email || ""
+          };
+        }
+      } catch (_) {}
+
+      return {
+        name: "Usuario Corporativo",
+        email: ""
+      };
+    }
+
+    function renderCorporateUserBadge() {
+      const user = resolveCorporateUser();
+      const nameEl = document.getElementById("currentUserName");
+      const emailEl = document.getElementById("currentUserEmail");
+      if (nameEl) nameEl.textContent = user.name;
+      if (emailEl) {
+        emailEl.textContent = user.email ? `(${user.email})` : "";
+      }
+    }
+
+    function promptCorporateUser() {
+      const current = resolveCorporateUser();
+      const input = window.prompt(
+        "Ingresa el correo corporativo o nombre de quien abre el portal (ej: nombre.apellido@skyairline.com):",
+        current.email || (current.name !== "Usuario Corporativo" ? current.name : "")
+      );
+      if (input === null) return;
+
+      const trimmed = input.trim();
+      if (!trimmed) {
+        localStorage.removeItem(USER_STORAGE_KEY);
+        renderCorporateUserBadge();
+        return;
+      }
+
+      const isEmail = trimmed.includes("@");
+      const userObj = {
+        name: isEmail ? formatNameFromEmail(trimmed) : trimmed,
+        email: isEmail ? trimmed.toLowerCase() : ""
+      };
+      localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(userObj));
+      renderCorporateUserBadge();
+    }
+
+    function normalizeEmbedUrl(rawUrl) {
+      if (!rawUrl || !rawUrl.trim()) return "";
+      const match = rawUrl.match(/src=["']([^"']+)["']/i);
+      let url = match ? match[1] : rawUrl.trim();
+      url = url
+        .replace(/wdAllowInteractivity=False/gi, "wdAllowInteractivity=True")
+        .replace(/wdHideGridlines=True/gi, "wdHideGridlines=False")
+        .replace(/wdHideHeaders=True/gi, "wdHideHeaders=False")
+        .replace(/&?wdInConfigurator=True/gi, "");
+      return url;
+    }
+
+    const ITEM_CONFIG = {
+      home: {
+        group: "Unidad Central de Monitoreo de Mantenimiento",
+        label: "UCMM · MENÚ PRINCIPAL",
+        title: "Menú Principal",
+        desc: "Selecciona el módulo o taller que deseas visualizar."
+      },
+      mn_programacion: {
+        group: "Mantenimiento nocturno",
+        label: "UCMM · MANTENIMIENTO NOCTURNO · PROGRAMACIÓN",
+        title: "Programación",
+        desc: "Navega por las pestañas inferiores, filtra columnas y revisa los datos en vivo.",
+        embedUrl: "https://skyairlinedocs-my.sharepoint.com/personal/christian_claros_skyairline_com/_layouts/15/Doc.aspx?sourcedoc={fef605bf-f86c-4733-ae23-1e7f95bf379f}&action=embedview&wdAllowInteractivity=True&wdHideGridlines=False&wdHideHeaders=False&wdDownloadButton=True"
+      },
+      mn_turno: {
+        group: "Mantenimiento nocturno",
+        label: "UCMM · MANTENIMIENTO NOCTURNO · TURNO",
+        title: "Turno",
+        desc: "Libro Excel en vivo · ROL_MNTTO.xlsx",
+        embedUrl: "https://skyairlinedocs-my.sharepoint.com/personal/isaias_valenzuela_skyairline_com/_layouts/15/Doc.aspx?sourcedoc={6e8adbc4-8ac4-4e42-ac4c-e43c3e13831a}&action=embedview&wdAllowInteractivity=True&wdHideGridlines=False&wdHideHeaders=False&wdDownloadButton=True"
+      },
+      mn_distribucion: {
+        group: "Mantenimiento nocturno",
+        label: "UCMM · MANTENIMIENTO NOCTURNO · DISTRIBUCIÓN",
+        title: "Distribución",
+        desc: "Planilla en vivo de Distribución de Mantenimiento Nocturno.",
+        embedUrl: normalizeEmbedUrl('<iframe width="402" height="346" frameborder="0" scrolling="no" src="https://skyairlinedocs-my.sharepoint.com/personal/christian_claros_skyairline_com/_layouts/15/Doc.aspx?sourcedoc={14981c18-55da-44fc-b526-531a66583349}&action=embedview&wdAllowInteractivity=False&wdHideGridlines=True&wdHideHeaders=True&wdDownloadButton=True&wdInConfigurator=True&wdInConfigurator=True"></iframe>')
+      },
+      mn_plantilla_turno: {
+        group: "Mantenimiento nocturno",
+        label: "UCMM · MANTENIMIENTO NOCTURNO · PLANTILLA TURNO",
+        title: "Plantilla turno",
+        desc: "Plantilla de turno en vivo para mantenimiento nocturno.",
+        embedUrl: normalizeEmbedUrl('<iframe width="402" height="346" frameborder="0" scrolling="no" src="https://skyairlinedocs-my.sharepoint.com/personal/christian_claros_skyairline_com/_layouts/15/Doc.aspx?sourcedoc={1f7c49b5-b68b-48ed-a189-0e163c1305d3}&action=embedview&wdAllowInteractivity=False&wdHideGridlines=True&wdHideHeaders=True&wdDownloadButton=True&wdInConfigurator=True&wdInConfigurator=True"></iframe>')
+      },
+      taller_aog: {
+        group: "Talleres",
+        label: "UCMM · TALLERES · AOG",
+        title: "AOG",
+        desc: "Planilla en vivo del taller AOG.",
+        embedUrl: ""
+      },
+      taller_tru: {
+        group: "Talleres",
+        label: "UCMM · TALLERES · TRU",
+        title: "TRU",
+        desc: "Planilla en vivo del taller TRU.",
+        embedUrl: ""
+      },
+      taller_eng: {
+        group: "Talleres",
+        label: "UCMM · TALLERES · ENG",
+        title: "ENG",
+        desc: "Planilla en vivo del taller ENG.",
+        embedUrl: ""
+      },
+      upload: {
+        group: "Repositorio /NEXO",
+        label: "UCMM · CARGAS Y SUBIDAS",
+        title: "Cargas y subidas",
+        desc: "Sube archivos directamente hacia OneDrive (/NEXO)."
+      }
+    };
+
+    let currentCategory = "home";
+    let nextRefreshTimestamp = Date.now() + FOUR_HOURS_MS;
+    const loadedFrameTimestamps = {};
+
+    function startRealTimeClock() {
+      const clockEl = document.getElementById("realTimeClock");
+      const nextEl = document.getElementById("nextAutoRefreshLabel");
+
+      const tick = () => {
+        const now = new Date();
+        if (clockEl) {
+          clockEl.textContent = now.toLocaleTimeString("es-CL", {
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit"
+          });
+        }
+        if (nextEl) {
+          const nextDate = new Date(nextRefreshTimestamp);
+          nextEl.textContent = "Próximo ciclo 4h: " + nextDate.toLocaleTimeString("es-CL", {
+            hour: "2-digit",
+            minute: "2-digit"
+          });
+        }
+      };
+
+      tick();
+      setInterval(tick, 1000);
+    }
+
+    function withCacheBust(url, stamp) {
+      const sep = url.includes("?") ? "&" : "?";
+      return `${url}${sep}_refresh=${stamp}`;
+    }
+
+    function applyIframeForKey(key, forceReload = false) {
+      const cfg = ITEM_CONFIG[key];
+      const activeIframe = document.getElementById("activeExcelIframe");
+      const excelContainer = document.getElementById("excelFrameContainer");
+      const excelToolbar = document.getElementById("excelToolbar");
+      const liveBadge = document.getElementById("liveBadge");
+      const pendingBox = document.getElementById("pendingUrlBox");
+
+      if (!cfg) return;
+
+      if (cfg.embedUrl && cfg.embedUrl.trim() !== "") {
+        excelContainer.classList.remove("hidden");
+        excelToolbar.classList.remove("hidden");
+        liveBadge.classList.remove("hidden");
+        pendingBox.classList.add("hidden");
+
+        if (forceReload || !loadedFrameTimestamps[key]) {
+          loadedFrameTimestamps[key] = Date.now();
+        }
+        const targetSrc = withCacheBust(cfg.embedUrl, loadedFrameTimestamps[key]);
+        if (activeIframe.src !== targetSrc) {
+          activeIframe.src = targetSrc;
+        }
+      } else {
+        activeIframe.src = "";
+        excelContainer.classList.add("hidden");
+        excelToolbar.classList.add("hidden");
+        liveBadge.classList.add("hidden");
+        pendingBox.classList.remove("hidden");
+      }
+    }
+
+    function refreshAllDocuments(isManual = false) {
+      const stamp = Date.now();
+      nextRefreshTimestamp = stamp + FOUR_HOURS_MS;
+
+      Object.keys(ITEM_CONFIG).forEach(k => {
+        if (ITEM_CONFIG[k].embedUrl) {
+          loadedFrameTimestamps[k] = stamp;
+        }
+      });
+
+      if (!["home", "upload"].includes(currentCategory)) {
+        applyIframeForKey(currentCategory, true);
+      }
+
+      const timeStr = new Date(stamp).toLocaleTimeString("es-CL", {
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit"
+      });
+      setBanner(
+        isManual
+          ? `Todos los documentos actualizados manualmente a las ${timeStr}. Próxima actualización automática en 4 horas.`
+          : `Ciclo automático de 4 horas ejecutado a las ${timeStr}: todos los documentos fueron actualizados.`,
+        "info"
+      );
+    }
+
+    function toggleAccordion(contentId, chevronId) {
+      const content = document.getElementById(contentId);
+      const chevron = document.getElementById(chevronId);
+      if (content) content.classList.toggle("hidden");
+      if (chevron) chevron.classList.toggle("rotate-180");
+    }
+
+    function selectFocusedView(key) {
+      currentCategory = key;
+
+      if (window.innerWidth < 1024) {
+        setMobileNavOpen(false);
+      }
+
+      document.querySelectorAll(".nav-btn").forEach(b => {
+        b.classList.remove("nav-item-active", "font-semibold");
+        b.classList.add("font-medium");
+      });
+      const targetBtn = document.querySelector(`[data-nav="${key}"]`);
+      if (targetBtn) {
+        targetBtn.classList.add("nav-item-active", "font-semibold");
+        targetBtn.classList.remove("font-medium");
+      }
+
+      const cfg = ITEM_CONFIG[key] || {
+        group: "Módulo",
+        label: key.toUpperCase(),
+        title: key,
+        desc: "Vista dedicada."
+      };
+
+      document.getElementById("topCategoryLabel").textContent = cfg.label;
+      document.getElementById("topMainTitle").textContent = cfg.title;
+
+      const homeView = document.getElementById("viewHomeMenu");
+      const singleView = document.getElementById("viewSingleItem");
+      const activeIframe = document.getElementById("activeExcelIframe");
+
+      if (key === "home") {
+        activeIframe.src = "";
+        singleView.classList.add("hidden");
+        homeView.classList.remove("hidden");
+        setBanner("Bienvenido a UCMM. Selecciona el módulo o taller que deseas consultar.", "info");
+        return;
+      }
+
+      homeView.classList.add("hidden");
+      singleView.classList.remove("hidden");
+
+      const excelContainer = document.getElementById("excelFrameContainer");
+      const excelToolbar = document.getElementById("excelToolbar");
+      const liveBadge = document.getElementById("liveBadge");
+      const pendingBox = document.getElementById("pendingUrlBox");
+      const uploadBox = document.getElementById("singleUploadBox");
+
+      excelContainer.classList.add("hidden");
+      excelToolbar.classList.add("hidden");
+      liveBadge.classList.add("hidden");
+      pendingBox.classList.add("hidden");
+      uploadBox.classList.add("hidden");
+
+      document.getElementById("singleItemGroup").textContent = cfg.group;
+      document.getElementById("singleItemTitle").textContent = cfg.title;
+      document.getElementById("singleItemDesc").textContent = cfg.desc;
+      setBanner(`Vista exclusiva: ${cfg.group} → ${cfg.title}.`, "info");
+
+      if (key === "upload") {
+        activeIframe.src = "";
+        uploadBox.classList.remove("hidden");
+        return;
+      }
+
+      applyIframeForKey(key, false);
+    }
+
+    function toggleFullScreen(containerId) {
+      const container = document.getElementById(containerId);
+      if (!document.fullscreenElement) {
+        container.requestFullscreen().catch(() => {});
+      } else {
+        document.exitFullscreen().catch(() => {});
+      }
+    }
+
+    function handleFileUpload(file) {
+      if (!file) return;
+      setBanner(`Transmitiendo "${file.name}" hacia OneDrive...`, "info");
+
+      const reader = new FileReader();
+      reader.onload = async () => {
+        const base64Content = reader.result.split(",")[1];
+        try {
+          const res = await fetch(FLOW_UPLOAD_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ fileName: file.name, fileContent: base64Content })
+          });
+          if (!res.ok) throw new Error("Error al transmitir el archivo en Power Automate.");
+          setBanner(`Archivo "${file.name}" cargado exitosamente en /NEXO.`, "info");
+        } catch (err) {
+          setBanner(err.message, "error");
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function setBanner(msg, type) {
+      const banner = document.getElementById("statusBanner");
+      const text = document.getElementById("statusText");
+      text.textContent = msg;
+      banner.style.borderColor = type === "error" ? "#E11D48" : "#E2E8F0";
+    }
+
+    const dz = document.getElementById("dropZone");
+    if (dz) {
+      dz.addEventListener("dragover", e => { e.preventDefault(); dz.classList.add("border-[#EC008C]", "bg-pink-50/30"); });
+      dz.addEventListener("dragleave", () => dz.classList.remove("border-[#EC008C]", "bg-pink-50/30"));
+      dz.addEventListener("drop", e => {
+        e.preventDefault();
+        dz.classList.remove("border-[#EC008C]", "bg-pink-50/30");
+        if (e.dataTransfer.files[0]) handleFileUpload(e.dataTransfer.files[0]);
+      });
+    }
+
+    window.addEventListener("resize", () => {
+      const bodyEl = document.getElementById("sidebarCollapsibleBody");
+      if (window.innerWidth >= 1024 && bodyEl) {
+        bodyEl.classList.remove("hidden");
+      }
+    });
+
+    window.addEventListener("DOMContentLoaded", () => {
+      if (window.lucide) lucide.createIcons();
+      renderCorporateUserBadge();
+      startRealTimeClock();
+      selectFocusedView("home");
+      setInterval(() => refreshAllDocuments(false), FOUR_HOURS_MS);
+    });
+  </script>
+</body>
+</html>
