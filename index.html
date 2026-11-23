@@ -49,20 +49,11 @@
       border-bottom: 1px solid #00632D;
       color: #FFFFFF;
     }
-    .sky-green-header h1 {
-      color: #FFFFFF !important;
-    }
-    .sky-green-header #topCategoryLabel {
-      color: #D1FAE5 !important;
-    }
+    .sky-green-header h1 { color: #FFFFFF !important; }
+    .sky-green-header #topCategoryLabel { color: #D1FAE5 !important; }
 
-    .btn-magenta {
-      background-color: #EC008C;
-      color: #FFFFFF;
-    }
-    .btn-magenta:hover {
-      background-color: #D1007B;
-    }
+    .btn-magenta { background-color: #EC008C; color: #FFFFFF; }
+    .btn-magenta:hover { background-color: #D1007B; }
     .btn-slate {
       background-color: #FFFFFF;
       border: 1px solid #CBD5E1;
@@ -80,21 +71,16 @@
       border-color: #EC008C;
       box-shadow: 0 6px 16px rgba(15, 23, 42, 0.07);
     }
-    ::-webkit-scrollbar { width: 6px; height: 6px; }
-    ::-webkit-scrollbar-track { background: #F4F6F9; }
-    ::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 3px; }
   </style>
 </head>
 <body class="min-h-screen flex flex-col lg:flex-row antialiased overflow-x-hidden">
 
   <input type="file" id="globalFileInput" class="hidden" onchange="handleFileUpload(event.target.files[0])" />
 
-  <!-- ================= SIDEBAR IZQUIERDO / MENÚ MÓVIL ================= -->
   <aside class="sidebar-bg w-full lg:w-72 shrink-0 lg:h-screen lg:sticky lg:top-0 flex flex-col justify-between shadow-sm">
     <div class="flex flex-col lg:h-full lg:overflow-hidden">
-
       <div class="p-3.5 sm:p-4 flex items-center justify-between gap-2 border-b border-white/10 shrink-0">
-        <button type="button" onclick="selectFocusedView('home')" title="Ir al menú principal" class="flex items-center gap-3 text-left min-w-0 flex-1 hover:opacity-95 transition cursor-pointer">
+        <button type="button" onclick="selectFocusedView('home')" class="flex items-center gap-3 text-left min-w-0 flex-1 hover:opacity-95 transition cursor-pointer">
           <div class="w-10 h-9 sm:w-11 sm:h-10 rounded-lg bg-gradient-to-br from-[#EC008C] to-[#7C3AED] flex items-center justify-center font-bold text-white text-xs tracking-wider shadow-sm shrink-0">
             UCMM
           </div>
@@ -121,7 +107,6 @@
             Módulos Operacionales
           </div>
 
-          <!-- Desplegable: Mantenimiento nocturno -->
           <div class="pt-1">
             <button type="button" onclick="toggleAccordion('groupMantNocturno', 'chevronMantNocturno')" class="nav-btn w-full flex items-center justify-between px-3 py-2.5 rounded-r-lg text-xs font-semibold text-slate-200 text-left transition cursor-pointer">
               <span class="flex items-center gap-3 min-w-0">
@@ -150,7 +135,6 @@
             </div>
           </div>
 
-          <!-- Desplegable: Talleres -->
           <div class="pt-1">
             <button type="button" onclick="toggleAccordion('groupTalleres', 'chevronTalleres')" class="nav-btn w-full flex items-center justify-between px-3 py-2.5 rounded-r-lg text-xs font-semibold text-slate-200 text-left transition cursor-pointer">
               <span class="flex items-center gap-3 min-w-0">
@@ -175,7 +159,7 @@
             </div>
           </div>
 
-          <button type="button" data-nav="upload" onclick="selectFocusedView('upload')" title="Cargas y subidas" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-r-lg text-xs font-medium text-slate-600 text-left transition mt-2 cursor-pointer">
+          <button type="button" data-nav="upload" onclick="selectFocusedView('upload')" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-r-lg text-xs font-medium text-slate-600 text-left transition mt-2 cursor-pointer">
             <i data-lucide="upload-cloud" class="w-4 h-4 text-sky-300 shrink-0"></i>
             <span class="truncate">Cargas y subidas</span>
           </button>
@@ -190,13 +174,10 @@
           <div class="text-slate-400">Auto-refresh: <span class="text-emerald-300 font-semibold">Cada 4 horas</span></div>
         </div>
       </div>
-
     </div>
   </aside>
 
-  <!-- ================= ÁREA PRINCIPAL FOCALIZADA ================= -->
   <div class="flex-1 flex flex-col min-w-0">
-
     <header class="sky-green-header px-4 sm:px-6 py-3.5 sm:py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm">
       <div class="min-w-0">
         <div id="topCategoryLabel" class="text-[10px] font-bold uppercase tracking-widest truncate">
@@ -213,7 +194,7 @@
           <span id="realTimeClock" class="font-semibold tracking-wider">--:--:--</span>
         </div>
 
-        <button type="button" id="userBadgeBtn" onclick="promptCorporateUser()" title="Clic para actualizar usuario/correo corporativo" class="btn-slate px-2.5 py-1.5 rounded-md text-[11px] sm:text-xs font-medium flex items-center gap-1.5 max-w-[180px] sm:max-w-none cursor-pointer">
+        <button type="button" id="userBadgeBtn" onclick="promptCorporateUser()" class="btn-slate px-2.5 py-1.5 rounded-md text-[11px] sm:text-xs font-medium flex items-center gap-1.5 max-w-[180px] sm:max-w-none cursor-pointer">
           <i data-lucide="user" class="w-3.5 h-3.5 text-[#0078D4] shrink-0"></i>
           <span id="currentUserName" class="truncate">Usuario Corporativo</span>
           <span id="currentUserEmail" class="text-[10px] text-slate-500 hidden md:inline"></span>
@@ -227,7 +208,6 @@
     </header>
 
     <main class="flex-1 p-4 sm:p-6 space-y-4 sm:space-y-5 max-w-[1600px] w-full mx-auto">
-
       <div id="statusBanner" class="panel-card rounded-lg px-3.5 sm:px-4 py-2.5 sm:py-3 text-xs text-slate-700 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
         <div class="flex items-start sm:items-center gap-2.5 min-w-0">
           <i id="statusIcon" data-lucide="info" class="w-4 h-4 text-[#0078D4] shrink-0 mt-0.5 sm:mt-0"></i>
@@ -238,7 +218,6 @@
         </div>
       </div>
 
-      <!-- ================= INTERFAZ DE BIENVENIDA / MENÚ PRINCIPAL ================= -->
       <div id="viewHomeMenu" class="space-y-5 sm:space-y-6">
         <section class="panel-card rounded-xl p-4 sm:p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div class="space-y-1.5 max-w-2xl">
@@ -250,7 +229,7 @@
               Bienvenido a la Unidad Central de Monitoreo de Mantenimiento (UCMM)
             </h2>
             <p class="text-xs text-slate-600 leading-relaxed">
-              Selecciona una opción para ver su planilla en vivo dentro de la misma web o gestionar cargas en el repositorio. Todos los documentos vinculados se actualizan automáticamente cada 4 horas.
+              En pantallas de celular, al tocar un módulo vinculado se abre directamente en ventana completa para evitar el bloqueo de inicio de sesión dentro del recuadro.
             </p>
           </div>
           <div class="flex items-center gap-2 shrink-0 flex-wrap">
@@ -265,7 +244,6 @@
           </div>
         </section>
 
-        <!-- Mantenimiento nocturno -->
         <section class="space-y-3">
           <div class="flex items-center gap-2 px-1">
             <i data-lucide="moon" class="w-4 h-4 text-[#4A2E7A]"></i>
@@ -284,7 +262,7 @@
                 <p class="text-[11px] text-slate-500 mt-1">Planilla en vivo de programación de mantenimiento nocturno.</p>
               </div>
               <div class="text-xs font-semibold text-[#007A38] flex items-center gap-1.5">
-                <span>Ver en la web</span>
+                <span>Abrir módulo</span>
                 <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
               </div>
             </button>
@@ -301,7 +279,7 @@
                 <p class="text-[11px] text-slate-500 mt-1">Control de dotación y turnos en vivo.</p>
               </div>
               <div class="text-xs font-semibold text-[#007A38] flex items-center gap-1.5">
-                <span>Ver en la web</span>
+                <span>Abrir módulo</span>
                 <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
               </div>
             </button>
@@ -318,7 +296,7 @@
                 <p class="text-[11px] text-slate-500 mt-1">Planilla en vivo de distribución de mantenimiento nocturno.</p>
               </div>
               <div class="text-xs font-semibold text-[#007A38] flex items-center gap-1.5">
-                <span>Ver en la web</span>
+                <span>Abrir módulo</span>
                 <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
               </div>
             </button>
@@ -335,14 +313,13 @@
                 <p class="text-[11px] text-slate-500 mt-1">Plantilla de turno en vivo para mantenimiento nocturno.</p>
               </div>
               <div class="text-xs font-semibold text-[#007A38] flex items-center gap-1.5">
-                <span>Ver en la web</span>
+                <span>Abrir módulo</span>
                 <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
               </div>
             </button>
           </div>
         </section>
 
-        <!-- Talleres -->
         <section class="space-y-3">
           <div class="flex items-center gap-2 px-1">
             <i data-lucide="wrench" class="w-4 h-4 text-[#007A38]"></i>
@@ -361,41 +338,41 @@
                 <p class="text-[11px] text-slate-500 mt-1">Acceso directo al módulo del taller AOG.</p>
               </div>
               <div class="text-xs font-semibold text-[#4A2E7A] flex items-center gap-1.5">
-                <span>Ver en la web</span>
+                <span>Abrir módulo</span>
                 <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
               </div>
             </button>
 
             <button type="button" onclick="selectFocusedView('taller_tru')" class="quick-card panel-card rounded-xl p-4 sm:p-5 text-left flex flex-col justify-between gap-3 sm:gap-4 cursor-pointer">
               <div class="flex items-start justify-between gap-3">
-                <div class="w-10 h-10 rounded-lg bg-purple-50 border border-purple-200 flex items-center justify-center text-[#4A2E7A] shrink-0">
-                  <i data-lucide="cog" class="w-5 h-5"></i>
+                <div class="w-10 h-10 rounded-lg bg-sky-50 border border-sky-200 flex items-center justify-center text-[#0369A1] shrink-0">
+                  <i data-lucide="circle-dot" class="w-5 h-5"></i>
                 </div>
                 <span class="text-[10px] font-semibold px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200">Pendiente</span>
               </div>
               <div>
                 <div class="text-sm font-bold text-slate-900">TRU</div>
-                <p class="text-[11px] text-slate-500 mt-1">Acceso directo al módulo del taller TRU.</p>
+                <p class="text-[11px] text-slate-500 mt-1">Planilla en vivo del taller de ruedas SKY.</p>
               </div>
               <div class="text-xs font-semibold text-[#4A2E7A] flex items-center gap-1.5">
-                <span>Ver en la web</span>
+                <span>Abrir módulo</span>
                 <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
               </div>
             </button>
 
             <button type="button" onclick="selectFocusedView('taller_eng')" class="quick-card panel-card rounded-xl p-4 sm:p-5 text-left flex flex-col justify-between gap-3 sm:gap-4 cursor-pointer">
               <div class="flex items-start justify-between gap-3">
-                <div class="w-10 h-10 rounded-lg bg-purple-50 border border-purple-200 flex items-center justify-center text-[#4A2E7A] shrink-0">
-                  <i data-lucide="cpu" class="w-5 h-5"></i>
+                <div class="w-10 h-10 rounded-lg bg-rose-50 border border-rose-200 flex items-center justify-center text-[#BE123C] shrink-0">
+                  <i data-lucide="fan" class="w-5 h-5"></i>
                 </div>
                 <span class="text-[10px] font-semibold px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200">Pendiente</span>
               </div>
               <div>
                 <div class="text-sm font-bold text-slate-900">ENG</div>
-                <p class="text-[11px] text-slate-500 mt-1">Acceso directo al módulo del taller ENG.</p>
+                <p class="text-[11px] text-slate-500 mt-1">Planilla en vivo del taller de motores (Engine).</p>
               </div>
               <div class="text-xs font-semibold text-[#4A2E7A] flex items-center gap-1.5">
-                <span>Ver en la web</span>
+                <span>Abrir módulo</span>
                 <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
               </div>
             </button>
@@ -403,7 +380,6 @@
         </section>
       </div>
 
-      <!-- ================= VISTA DEDICADA PARA SUB-ÍTEMS Y CARGAS ================= -->
       <div id="viewSingleItem" class="hidden space-y-4">
         <section class="panel-card rounded-xl p-3.5 sm:p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div class="flex items-center gap-3 min-w-0">
@@ -432,6 +408,9 @@
               <i data-lucide="layout-grid" class="w-3.5 h-3.5 text-[#4A2E7A]"></i><span>Menú principal</span>
             </button>
             <div id="excelToolbar" class="flex items-center gap-2 flex-wrap">
+              <a id="openDirectLink" href="#" target="_blank" rel="noopener noreferrer" class="btn-magenta px-3 py-1.5 rounded-md text-xs font-semibold flex items-center gap-1.5 cursor-pointer">
+                <i data-lucide="external-link" class="w-3.5 h-3.5"></i><span>Abrir en ventana completa</span>
+              </a>
               <button type="button" onclick="refreshAllDocuments(true)" class="btn-slate px-3 py-1.5 rounded-md text-xs font-medium flex items-center gap-1.5 cursor-pointer">
                 <i data-lucide="refresh-cw" class="w-3.5 h-3.5 text-[#0078D4]"></i><span>Actualizar ahora</span>
               </button>
@@ -442,12 +421,10 @@
           </div>
         </section>
 
-        <!-- Visor Excel SharePoint en vivo dentro de la misma web -->
         <section id="excelFrameContainer" class="panel-card rounded-xl overflow-hidden bg-white relative h-[65vh] min-h-[420px] sm:h-[75vh] lg:h-[80vh]">
           <iframe id="activeExcelIframe" src="" class="w-full h-full border-0" allowfullscreen></iframe>
         </section>
 
-        <!-- Aviso cuando aún no se ha pegado la URL de SharePoint de ese ítem -->
         <section id="pendingUrlBox" class="hidden panel-card rounded-xl p-6 sm:p-8 text-center space-y-2">
           <i data-lucide="link-2-off" class="w-8 h-8 text-amber-500 mx-auto"></i>
           <h3 class="text-xs font-bold uppercase tracking-wider text-slate-800">Archivo pendiente de vincular</h3>
@@ -456,7 +433,6 @@
           </p>
         </section>
 
-        <!-- Área de carga cuando se selecciona "Cargas y subidas" -->
         <section id="singleUploadBox" class="hidden panel-card rounded-xl p-4 sm:p-5">
           <div id="dropZone" onclick="document.getElementById('globalFileInput').click()" class="bg-slate-50 border-2 border-dashed border-slate-300 hover:border-[#EC008C] hover:bg-pink-50/20 rounded-lg p-6 sm:p-8 text-center cursor-pointer transition">
             <i data-lucide="upload-cloud" class="w-8 h-8 text-[#0078D4] mx-auto mb-2"></i>
@@ -465,21 +441,23 @@
           </div>
         </section>
       </div>
-
     </main>
   </div>
 
   <script>
     const FLOW_UPLOAD_URL = "https://default4fd648bccc1f43029f1b8fe9f89fa0.92.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/04/workflows/46117fa4a53e411c8179f50d3b148106/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=iiqvuqerFKiszh-Vnw2j542auW8jSisWek4ZzF8NWxw";
-
     const FOUR_HOURS_MS = 4 * 60 * 60 * 1000;
     const USER_STORAGE_KEY = "ucmm_corp_user";
+
+    function isMobileScreen() {
+      return window.innerWidth < 1024;
+    }
 
     function setMobileNavOpen(isOpen) {
       const bodyEl = document.getElementById("sidebarCollapsibleBody");
       const iconEl = document.getElementById("mobileMenuIcon");
       if (!bodyEl) return;
-      if (window.innerWidth >= 1024) {
+      if (!isMobileScreen()) {
         bodyEl.classList.remove("hidden");
         return;
       }
@@ -496,48 +474,22 @@
     function toggleMobileNav() {
       const bodyEl = document.getElementById("sidebarCollapsibleBody");
       if (!bodyEl) return;
-      const willOpen = bodyEl.classList.contains("hidden");
-      setMobileNavOpen(willOpen);
+      setMobileNavOpen(bodyEl.classList.contains("hidden"));
     }
 
     function formatNameFromEmail(email) {
       if (!email || !email.includes("@")) return "";
-      const localPart = email.split("@")[0];
-      return localPart
-        .replace(/[._-]+/g, " ")
-        .trim()
-        .replace(/\b\w/g, c => c.toUpperCase());
+      return email.split("@")[0].replace(/[._-]+/g, " ").trim().replace(/\b\w/g, c => c.toUpperCase());
     }
 
     function resolveCorporateUser() {
-      const injected = window.UCMM_CORPORATE_USER || window.NEXO_CORPORATE_USER || (window._spPageContextInfo && window._spPageContextInfo.userDisplayName
-        ? {
-            name: window._spPageContextInfo.userDisplayName,
-            email: window._spPageContextInfo.userEmail || ""
-          }
-        : null);
-
-      if (injected && (injected.name || injected.email)) {
-        return {
-          name: injected.name || formatNameFromEmail(injected.email),
-          email: injected.email || ""
-        };
-      }
-
       try {
         const saved = JSON.parse(localStorage.getItem(USER_STORAGE_KEY) || "null");
         if (saved && (saved.name || saved.email)) {
-          return {
-            name: saved.name || formatNameFromEmail(saved.email),
-            email: saved.email || ""
-          };
+          return { name: saved.name || formatNameFromEmail(saved.email), email: saved.email || "" };
         }
       } catch (_) {}
-
-      return {
-        name: "Usuario Corporativo",
-        email: ""
-      };
+      return { name: "Usuario Corporativo", email: "" };
     }
 
     function renderCorporateUserBadge() {
@@ -545,32 +497,27 @@
       const nameEl = document.getElementById("currentUserName");
       const emailEl = document.getElementById("currentUserEmail");
       if (nameEl) nameEl.textContent = user.name;
-      if (emailEl) {
-        emailEl.textContent = user.email ? `(${user.email})` : "";
-      }
+      if (emailEl) emailEl.textContent = user.email ? `(${user.email})` : "";
     }
 
     function promptCorporateUser() {
       const current = resolveCorporateUser();
       const input = window.prompt(
-        "Ingresa el correo corporativo o nombre de quien abre el portal (ej: nombre.apellido@skyairline.com):",
+        "Ingresa tu correo corporativo o nombre (ej: isaias.valenzuela@skyairline.com):",
         current.email || (current.name !== "Usuario Corporativo" ? current.name : "")
       );
       if (input === null) return;
-
       const trimmed = input.trim();
       if (!trimmed) {
         localStorage.removeItem(USER_STORAGE_KEY);
         renderCorporateUserBadge();
         return;
       }
-
       const isEmail = trimmed.includes("@");
-      const userObj = {
+      localStorage.setItem(USER_STORAGE_KEY, JSON.stringify({
         name: isEmail ? formatNameFromEmail(trimmed) : trimmed,
         email: isEmail ? trimmed.toLowerCase() : ""
-      };
-      localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(userObj));
+      }));
       renderCorporateUserBadge();
     }
 
@@ -578,12 +525,16 @@
       if (!rawUrl || !rawUrl.trim()) return "";
       const match = rawUrl.match(/src=["']([^"']+)["']/i);
       let url = match ? match[1] : rawUrl.trim();
-      url = url
+      return url
         .replace(/wdAllowInteractivity=False/gi, "wdAllowInteractivity=True")
         .replace(/wdHideGridlines=True/gi, "wdHideGridlines=False")
         .replace(/wdHideHeaders=True/gi, "wdHideHeaders=False")
         .replace(/&?wdInConfigurator=True/gi, "");
-      return url;
+    }
+
+    function toDirectViewUrl(embedUrl) {
+      if (!embedUrl) return "";
+      return embedUrl.replace(/action=embedview/gi, "action=default");
     }
 
     const ITEM_CONFIG = {
@@ -621,33 +572,10 @@
         desc: "Plantilla de turno en vivo para mantenimiento nocturno.",
         embedUrl: normalizeEmbedUrl('<iframe width="402" height="346" frameborder="0" scrolling="no" src="https://skyairlinedocs-my.sharepoint.com/personal/christian_claros_skyairline_com/_layouts/15/Doc.aspx?sourcedoc={1f7c49b5-b68b-48ed-a189-0e163c1305d3}&action=embedview&wdAllowInteractivity=False&wdHideGridlines=True&wdHideHeaders=True&wdDownloadButton=True&wdInConfigurator=True&wdInConfigurator=True"></iframe>')
       },
-      taller_aog: {
-        group: "Talleres",
-        label: "UCMM · TALLERES · AOG",
-        title: "AOG",
-        desc: "Planilla en vivo del taller AOG.",
-        embedUrl: ""
-      },
-      taller_tru: {
-        group: "Talleres",
-        label: "UCMM · TALLERES · TRU",
-        title: "TRU",
-        desc: "Planilla en vivo del taller TRU.",
-        embedUrl: ""
-      },
-      taller_eng: {
-        group: "Talleres",
-        label: "UCMM · TALLERES · ENG",
-        title: "ENG",
-        desc: "Planilla en vivo del taller ENG.",
-        embedUrl: ""
-      },
-      upload: {
-        group: "Repositorio /NEXO",
-        label: "UCMM · CARGAS Y SUBIDAS",
-        title: "Cargas y subidas",
-        desc: "Sube archivos directamente hacia OneDrive (/NEXO)."
-      }
+      taller_aog: { group: "Talleres", label: "UCMM · TALLERES · AOG", title: "AOG", desc: "Planilla en vivo del taller AOG.", embedUrl: "" },
+      taller_tru: { group: "Talleres", label: "UCMM · TALLERES · TRU", title: "TRU", desc: "Planilla en vivo del taller de ruedas SKY.", embedUrl: "" },
+      taller_eng: { group: "Talleres", label: "UCMM · TALLERES · ENG", title: "ENG", desc: "Planilla en vivo del taller de motores (Engine).", embedUrl: "" },
+      upload: { group: "Repositorio /NEXO", label: "UCMM · CARGAS Y SUBIDAS", title: "Cargas y subidas", desc: "Sube archivos directamente hacia OneDrive (/NEXO)." }
     };
 
     let currentCategory = "home";
@@ -657,25 +585,14 @@
     function startRealTimeClock() {
       const clockEl = document.getElementById("realTimeClock");
       const nextEl = document.getElementById("nextAutoRefreshLabel");
-
       const tick = () => {
         const now = new Date();
-        if (clockEl) {
-          clockEl.textContent = now.toLocaleTimeString("es-CL", {
-            hour: "2-digit",
-            minute: "2-digit",
-            second: "2-digit"
-          });
-        }
+        if (clockEl) clockEl.textContent = now.toLocaleTimeString("es-CL", { hour: "2-digit", minute: "2-digit", second: "2-digit" });
         if (nextEl) {
           const nextDate = new Date(nextRefreshTimestamp);
-          nextEl.textContent = "Próximo ciclo 4h: " + nextDate.toLocaleTimeString("es-CL", {
-            hour: "2-digit",
-            minute: "2-digit"
-          });
+          nextEl.textContent = "Próximo ciclo 4h: " + nextDate.toLocaleTimeString("es-CL", { hour: "2-digit", minute: "2-digit" });
         }
       };
-
       tick();
       setInterval(tick, 1000);
     }
@@ -692,6 +609,7 @@
       const excelToolbar = document.getElementById("excelToolbar");
       const liveBadge = document.getElementById("liveBadge");
       const pendingBox = document.getElementById("pendingUrlBox");
+      const openDirectLink = document.getElementById("openDirectLink");
 
       if (!cfg) return;
 
@@ -700,12 +618,16 @@
         excelToolbar.classList.remove("hidden");
         liveBadge.classList.remove("hidden");
         pendingBox.classList.add("hidden");
+        if (openDirectLink) openDirectLink.href = toDirectViewUrl(cfg.embedUrl);
 
         if (forceReload || !loadedFrameTimestamps[key]) {
           loadedFrameTimestamps[key] = Date.now();
         }
         const targetSrc = withCacheBust(cfg.embedUrl, loadedFrameTimestamps[key]);
-        if (activeIframe.src !== targetSrc) {
+        if (forceReload) {
+          activeIframe.src = "about:blank";
+          setTimeout(() => { activeIframe.src = targetSrc; }, 50);
+        } else if (activeIframe.src !== targetSrc) {
           activeIframe.src = targetSrc;
         }
       } else {
@@ -720,28 +642,14 @@
     function refreshAllDocuments(isManual = false) {
       const stamp = Date.now();
       nextRefreshTimestamp = stamp + FOUR_HOURS_MS;
-
       Object.keys(ITEM_CONFIG).forEach(k => {
-        if (ITEM_CONFIG[k].embedUrl) {
-          loadedFrameTimestamps[k] = stamp;
-        }
+        if (ITEM_CONFIG[k].embedUrl) loadedFrameTimestamps[k] = stamp;
       });
-
-      if (!["home", "upload"].includes(currentCategory)) {
+      if (!["home", "upload"].includes(currentCategory) && !isMobileScreen()) {
         applyIframeForKey(currentCategory, true);
       }
-
-      const timeStr = new Date(stamp).toLocaleTimeString("es-CL", {
-        hour: "2-digit",
-        minute: "2-digit",
-        second: "2-digit"
-      });
-      setBanner(
-        isManual
-          ? `Todos los documentos actualizados manualmente a las ${timeStr}. Próxima actualización automática en 4 horas.`
-          : `Ciclo automático de 4 horas ejecutado a las ${timeStr}: todos los documentos fueron actualizados.`,
-        "info"
-      );
+      const timeStr = new Date(stamp).toLocaleTimeString("es-CL", { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+      setBanner(isManual ? `Documentos actualizados a las ${timeStr}.` : `Ciclo automático de 4h ejecutado a las ${timeStr}.`, "info");
     }
 
     function toggleAccordion(contentId, chevronId) {
@@ -752,11 +660,18 @@
     }
 
     function selectFocusedView(key) {
-      currentCategory = key;
+      const cfg = ITEM_CONFIG[key] || { group: "Módulo", label: key.toUpperCase(), title: key, desc: "Vista dedicada." };
 
-      if (window.innerWidth < 1024) {
+      if (isMobileScreen() && cfg.embedUrl && cfg.embedUrl.trim() !== "") {
         setMobileNavOpen(false);
+        const directUrl = toDirectViewUrl(cfg.embedUrl);
+        setBanner(`Abriendo "${cfg.title}" en ventana completa...`, "info");
+        window.open(directUrl, "_blank", "noopener,noreferrer");
+        return;
       }
+
+      currentCategory = key;
+      if (isMobileScreen()) setMobileNavOpen(false);
 
       document.querySelectorAll(".nav-btn").forEach(b => {
         b.classList.remove("nav-item-active", "font-semibold");
@@ -767,13 +682,6 @@
         targetBtn.classList.add("nav-item-active", "font-semibold");
         targetBtn.classList.remove("font-medium");
       }
-
-      const cfg = ITEM_CONFIG[key] || {
-        group: "Módulo",
-        label: key.toUpperCase(),
-        title: key,
-        desc: "Vista dedicada."
-      };
 
       document.getElementById("topCategoryLabel").textContent = cfg.label;
       document.getElementById("topMainTitle").textContent = cfg.title;
@@ -815,23 +723,18 @@
         uploadBox.classList.remove("hidden");
         return;
       }
-
       applyIframeForKey(key, false);
     }
 
     function toggleFullScreen(containerId) {
       const container = document.getElementById(containerId);
-      if (!document.fullscreenElement) {
-        container.requestFullscreen().catch(() => {});
-      } else {
-        document.exitFullscreen().catch(() => {});
-      }
+      if (!document.fullscreenElement) container.requestFullscreen().catch(() => {});
+      else document.exitFullscreen().catch(() => {});
     }
 
     function handleFileUpload(file) {
       if (!file) return;
       setBanner(`Transmitiendo "${file.name}" hacia OneDrive...`, "info");
-
       const reader = new FileReader();
       reader.onload = async () => {
         const base64Content = reader.result.split(",")[1];
@@ -857,22 +760,9 @@
       banner.style.borderColor = type === "error" ? "#E11D48" : "#E2E8F0";
     }
 
-    const dz = document.getElementById("dropZone");
-    if (dz) {
-      dz.addEventListener("dragover", e => { e.preventDefault(); dz.classList.add("border-[#EC008C]", "bg-pink-50/30"); });
-      dz.addEventListener("dragleave", () => dz.classList.remove("border-[#EC008C]", "bg-pink-50/30"));
-      dz.addEventListener("drop", e => {
-        e.preventDefault();
-        dz.classList.remove("border-[#EC008C]", "bg-pink-50/30");
-        if (e.dataTransfer.files[0]) handleFileUpload(e.dataTransfer.files[0]);
-      });
-    }
-
     window.addEventListener("resize", () => {
       const bodyEl = document.getElementById("sidebarCollapsibleBody");
-      if (window.innerWidth >= 1024 && bodyEl) {
-        bodyEl.classList.remove("hidden");
-      }
+      if (!isMobileScreen() && bodyEl) bodyEl.classList.remove("hidden");
     });
 
     window.addEventListener("DOMContentLoaded", () => {
